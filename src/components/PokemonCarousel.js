@@ -9,6 +9,7 @@ const POKEMON_LIMIT = 3; // Number of Pokémon to display per page
 
 function PokemonCarousel() {
   const [pokemons, setPokemons] = useState([]);
+  const [types, setTypes] = useState([]); // Store Pokémon types
   const [loading, setLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0');
   const [selectedType, setSelectedType] = useState('');
@@ -34,9 +35,21 @@ function PokemonCarousel() {
     }
   };
 
-  // Load Pokémon data when the component is mounted or `nextUrl` changes
+  // Function to load Pokémon types
+  const loadTypes = async () => {
+    try {
+      const response = await fetch('https://pokeapi.co/api/v2/type/');
+      const data = await response.json();
+      setTypes(data.results); // Save the list of types
+    } catch (error) {
+      console.error('Error loading Pokémon types:', error);
+    }
+  };
+
+  // Load Pokémon data and types when the component is mounted
   useEffect(() => {
     loadPokemons();
+    loadTypes();
   }, []);
 
   // Handle Pokémon selection
@@ -81,12 +94,12 @@ function PokemonCarousel() {
 
   // Scroll the carousel to the left
   const scrollLeft = () => {
-    carouselRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+    carouselRef.current.scrollBy({ left: -500, behavior: 'smooth' });
   };
 
   // Scroll the carousel to the right
   const scrollRight = () => {
-    carouselRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+    carouselRef.current.scrollBy({ left: 500, behavior: 'smooth' });
   };
 
   return (
@@ -94,18 +107,25 @@ function PokemonCarousel() {
       <div className="filters">
         <select onChange={handleTypeFilterChange} value={selectedType}>
           <option value="">Select Type</option>
-          <option value="fire">Fire</option>
-          <option value="water">Water</option>
-          <option value="electric">Electric</option>
-          {/* Add other types as needed */}
+          {types.map((type) => (
+            <option key={type.name} value={type.name}>
+              {type.name.charAt(0).toUpperCase() + type.name.slice(1)}
+            </option>
+          ))}
         </select>
       </div>
 
       <div className="carousel" ref={carouselRef} onScroll={handleScroll}>
-        {pokemons
-          .filter((pokemon) => {
+      {pokemons
+          .filter(async (pokemon) => {
             if (!selectedType) return true; // Show all Pokémon if no filter is selected
-            return pokemon.url.includes(`type/${selectedType}`); // Filter Pokémon by type
+
+            // Fetch Pokémon details to get their types
+            const response = await fetch(pokemon.url);
+            const data = await response.json();
+            const pokemonTypes = data.types.map((type) => type.type.name);
+
+            return pokemonTypes.includes(selectedType); // Filter Pokémon by type
           })
           .map((pokemon) => (
             <div
