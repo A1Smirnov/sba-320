@@ -1,0 +1,23 @@
+.arena {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .battlefield {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .player, .opponent {
+    width: 40%;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  img {
+    max-width: 150px;
+    height: auto;
+  }
+  

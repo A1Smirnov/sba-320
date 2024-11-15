@@ -132,7 +132,7 @@ function PokemonCarousel() {
         →
       </button>
 
-      {loading && <p>Loading more Pokémon...</p>}
+      {/* {loading && <p>Loading more Pokémon...</p>} */}
     </div>
   );
 }

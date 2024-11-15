@@ -7,12 +7,14 @@ import { fetchMonster } from '../services/pokeApi';
 import MonsterCard from '../components/MonsterCard';
 import '../styles/Home.css';
 import PokemonCarousel from '../components/PokemonCarousel.js';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const dispatch = useDispatch();
   const [monsterName, setMonsterName] = useState('');
   const [isCustom, setIsCustom] = useState(false);
   const monster = useSelector((state) => state.monster);
+  const navigate = useNavigate();
 
   const handleMonsterSelect = async (name) => {
     const data = await fetchMonster(name);
@@ -44,6 +46,7 @@ function Home() {
 
 
       <div className="monster-selection">
+        {monster.name && <MonsterCard monster={monster} />}
         {/* <button onClick={handleCreateCustomMonster}>Create Custom Monster</button> */}
 
         <div className="input-group">
@@ -60,13 +63,17 @@ function Home() {
       </div>
 
       {/* MonsterCard to view component */}
-      {monster.name && <MonsterCard monster={monster} />}
+      {/* {monster.name && <MonsterCard monster={monster} />} */}
 
 
 
-      <button className="start-game-button">
-        Go Arena!
-      </button>
+      <button
+          className="start-game-button"
+          onClick={() => navigate('/arena')}
+          disabled={!monster.name}
+        >
+          Go Arena!
+        </button>
     </div>
   );
 }
