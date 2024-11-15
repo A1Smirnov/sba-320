@@ -40,9 +40,11 @@ function Home() {
     <div className="home">
       <h1>Welcome to Pokemon Tactical Arena!</h1>
       <p>Select or create a monster to begin your adventure!</p>
+      <PokemonCarousel /> {/* CAROUSEL! */}
+
 
       <div className="monster-selection">
-        <button onClick={handleCreateCustomMonster}>Create Custom Monster</button>
+        {/* <button onClick={handleCreateCustomMonster}>Create Custom Monster</button> */}
 
         <div className="input-group">
           <input
@@ -60,7 +62,7 @@ function Home() {
       {/* MonsterCard to view component */}
       {monster.name && <MonsterCard monster={monster} />}
 
-      <PokemonCarousel /> {/* CAROUSEL! */}
+
 
       <button className="start-game-button">
         Go Arena!
