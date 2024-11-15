@@ -1,37 +1,88 @@
 // ./src/components/Arena.js
 
-import React from 'react';
+import React, { useState } from 'react';
+import { fetchMonster } from '../services/pokeApi';
 import { useSelector } from 'react-redux';
 import '../styles/Arena.css';
 
-function Arena() {
-  const monster = useSelector((state) => state.monster);
+const MAX_POKEMON_ID = 151; // Первое поколение
+
+const Arena = () => {
+  const [opponent, setOpponent] = useState(null);
+  const [opponentHP, setOpponentHP] = useState(100);
+  const [playerHP, setPlayerHP] = useState(100);
+  const player = useSelector((state) => state.monster);
+
+  const generateRandomPokemon = async () => {
+    const randomId = Math.floor(Math.random() * MAX_POKEMON_ID) + 1;
+    const data = await fetchMonster(randomId);
+    if (data) {
+      setOpponent({
+        name: data.name,
+        sprite: data.sprites?.front_default || '',
+        stats: { hp: 100 }, // Простая установка HP
+      });
+      setOpponentHP(100); // Сброс HP для нового покемона
+    }
+  };
+
+  const attackOpponent = () => {
+    if (!opponent) return;
+    const damage = Math.floor(Math.random() * 10) + 5; // Урон от 5 до 15
+    setOpponentHP((prev) => Math.max(prev - damage, 0));
+  };
+
+  const attackPlayer = () => {
+    const damage = Math.floor(Math.random() * 10) + 5;
+    setPlayerHP((prev) => Math.max(prev - damage, 0));
+  };
+
+  const handleNextTurn = () => {
+    attackOpponent(); // Атака игрока
+    if (opponentHP - 10 > 0) {
+      setTimeout(() => attackPlayer(), 1000); // Ответ соперника
+    }
+  };
 
   return (
     <div className="arena">
-      <h1>Battle Arena</h1>
+      <h1>Arena Battle</h1>
       <div className="battlefield">
-        {/* Игрок */}
         <div className="player">
-          <h2>{monster.name || 'Your Monster'}</h2>
-          <img src={monster.sprite} alt={monster.name} />
-          <p>HP: {monster.stats?.hp || 'N/A'}</p>
-          <p>Attack: {monster.stats?.attack || 'N/A'}</p>
-          <p>Defense: {monster.stats?.defense || 'N/A'}</p>
-          <p>Speed: {monster.stats?.speed || 'N/A'}</p>
+          {player && (
+            <>
+              <img src={player.sprite} alt={player.name} />
+              <p>{player.name}</p>
+              <p>HP: {playerHP}</p>
+            </>
+          )}
         </div>
-
-        {/* Оппонент (заглушка пока) */}
         <div className="opponent">
-          <h2>Opponent</h2>
-          <p>Coming soon...</p>
+          {opponent ? (
+            <>
+              <img
+                src={opponent.sprite}
+                alt={opponent.name}
+                onClick={generateRandomPokemon}
+                style={{ cursor: 'pointer' }}
+              />
+              <p>{opponent.name}</p>
+              <p>HP: {opponentHP}</p>
+            </>
+          ) : (
+            <button onClick={generateRandomPokemon}>Generate Opponent</button>
+          )}
         </div>
       </div>
-
-      {/* Кнопка возврата */}
-      <button onClick={() => window.history.back()}>Return</button>
+      <div className="controls">
+        <button onClick={handleNextTurn} disabled={!opponent}>
+          Attack
+        </button>
+      </div>
+      {opponentHP <= 0 && <p>Opponent defeated! Click to generate a new opponent.</p>}
+      {playerHP <= 0 && <p>You have been defeated!</p>}
     </div>
   );
-}
+};
 
 export default Arena;
