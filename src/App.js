@@ -1,5 +1,7 @@
 // ./src/App.js
 
+// ./src/App.js
+
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setMonster } from './features/monsterSlice';
@@ -7,6 +9,7 @@ import { fetchMonster } from './services/pokeApi';
 import './styles/main.css';
 import Home from './pages/Home.js';
 import Arena from './components/Arena.js';
+import Battle from './components/Battle'; // Импортируем Battle
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -15,7 +18,7 @@ function App() {
   useEffect(() => {
     const loadMonster = async () => {
       try {
-        const data = await fetchMonster(""); //EMPTY POKEMON!!!!
+        const data = await fetchMonster(""); // Пустой запрос для создания начального покемона
         if (data) {
           dispatch(setMonster({
             name: data.name,
@@ -43,6 +46,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/arena" element={<Arena />} />
+          <Route path="/battle" element={<Battle />} /> {/* Добавлен путь к бою */}
         </Routes>
       </div>
     </Router>

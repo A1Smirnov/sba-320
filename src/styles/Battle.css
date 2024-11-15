@@ -1,0 +1,33 @@
+/* ./src/styles/Battle.css */
+
+.battle {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .battle-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .player-monster, .opponent-monster {
+    text-align: center;
+  }
+  
+  .battle-actions button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  .battle-log {
+    margin: 20px 0;
+  }
+  
+  .battle-end {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { fetchMonster } from '../services/pokeApi';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate
 import '../styles/Arena.css';
 
 const MAX_POKEMON_ID = 151; // Первое поколение
@@ -12,6 +13,8 @@ const Arena = () => {
   const [opponentHP, setOpponentHP] = useState(100);
   const [playerHP, setPlayerHP] = useState(100);
   const player = useSelector((state) => state.monster);
+
+  const navigate = useNavigate(); // Для навигации на страницу с боем
 
   const generateRandomPokemon = async () => {
     const randomId = Math.floor(Math.random() * MAX_POKEMON_ID) + 1;
@@ -26,22 +29,14 @@ const Arena = () => {
     }
   };
 
-  const attackOpponent = () => {
-    if (!opponent) return;
-    const damage = Math.floor(Math.random() * 10) + 5; // Урон от 5 до 15
-    setOpponentHP((prev) => Math.max(prev - damage, 0));
-  };
-
-  const attackPlayer = () => {
-    const damage = Math.floor(Math.random() * 10) + 5;
-    setPlayerHP((prev) => Math.max(prev - damage, 0));
-  };
-
-  const handleNextTurn = () => {
-    attackOpponent(); // Атака игрока
-    if (opponentHP - 10 > 0) {
-      setTimeout(() => attackPlayer(), 1000); // Ответ соперника
-    }
+  const handleBattleStart = () => {
+    // Переход на страницу боя с передачей данных через state
+    navigate('/battle', {
+      state: {
+        player,
+        opponent: { ...opponent, hp: opponentHP }
+      }
+    });
   };
 
   return (
@@ -75,8 +70,8 @@ const Arena = () => {
         </div>
       </div>
       <div className="controls">
-        <button onClick={handleNextTurn} disabled={!opponent}>
-          Attack
+        <button onClick={handleBattleStart} disabled={!opponent}>
+          Start Battle
         </button>
       </div>
       {opponentHP <= 0 && <p>Opponent defeated! Click to generate a new opponent.</p>}
