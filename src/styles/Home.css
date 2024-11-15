@@ -1,0 +1,61 @@
+.home {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .monster-selection {
+    margin: 20px 0;
+  }
+  
+  .input-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .input-group input {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;
+  }
+  
+  .input-group button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .monster-info {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .monster-info h2 {
+    margin-bottom: 10px;
+  }
+  
+  .monster-info p {
+    margin: 5px 0;
+  }
+  
+  .start-game-button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .start-game-button:hover {
+    background-color: #45a049;
+  }
+  
