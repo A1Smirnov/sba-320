@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { fetchMonster } from '../services/pokeApi';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import '../styles/Arena.css';
 
-const MAX_POKEMON_ID = 151; // Первое поколение
+const MAX_POKEMON_ID = 151; // MAX POKEMON LOAD
 
 const Arena = () => {
   const [opponent, setOpponent] = useState(null);
@@ -14,7 +14,7 @@ const Arena = () => {
   const [playerHP, setPlayerHP] = useState(100);
   const player = useSelector((state) => state.monster);
 
-  const navigate = useNavigate(); // Для навигации на страницу с боем
+  const navigate = useNavigate(); 
 
   const generateRandomPokemon = async () => {
     const randomId = Math.floor(Math.random() * MAX_POKEMON_ID) + 1;
@@ -23,14 +23,13 @@ const Arena = () => {
       setOpponent({
         name: data.name,
         sprite: data.sprites?.front_default || '',
-        stats: { hp: 100 }, // Простая установка HP
+        stats: { hp: 100 }, // HP have setted to 100
       });
-      setOpponentHP(100); // Сброс HP для нового покемона
+      setOpponentHP(100); // HP have setted to 100
     }
   };
 
   const handleBattleStart = () => {
-    // Переход на страницу боя с передачей данных через state
     navigate('/battle', {
       state: {
         player,
