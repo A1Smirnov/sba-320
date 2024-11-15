@@ -3,23 +3,22 @@ import { useDispatch } from 'react-redux';
 import { setMonster } from '../features/monsterSlice';
 import '../styles/PokemonCarousel.css';
 
-const POKEMON_LIMIT = 3; // Number of Pokémon to display per page
+const POKEMON_LIMIT = 3;
 
 function PokemonCarousel() {
   const [pokemons, setPokemons] = useState([]);
-  const [filteredPokemons, setFilteredPokemons] = useState([]); // Покемоны после фильтрации
-  const [types, setTypes] = useState([]); // Список типов покемонов
+  const [filteredPokemons, setFilteredPokemons] = useState([]);
+  const [types, setTypes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [nextUrl, setNextUrl] = useState('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0');
   const [selectedType, setSelectedType] = useState('');
-  const loadedPokemons = useRef(new Set()); // Set для кеширования загруженных покемонов
+  const loadedPokemons = useRef(new Set());
   const carouselRef = useRef(null);
 
   const dispatch = useDispatch();
 
-  // Функция для загрузки данных о покемонах
   const loadPokemons = async () => {
-    if (loading || !nextUrl) return; // Предотвращаем несколько запросов
+    if (loading || !nextUrl) return;
     setLoading(true);
 
     try {
@@ -33,14 +32,18 @@ function PokemonCarousel() {
             id: details.id,
             name: details.name,
             sprite: details.sprites.front_default,
-            types: details.types.map((t) => t.type.name), // Массив типов покемона
+            types: details.types.map((t) => t.type.name),
+            stats: details.stats.reduce((acc, stat) => {
+              acc[stat.stat.name] = stat.base_stat;
+              return acc;
+            }, {}),
           };
         })
       );
 
-      setPokemons((prev) => [...prev, ...pokemonDetails]); // Добавляем новые покемоны в список
-      setFilteredPokemons((prev) => [...prev, ...pokemonDetails]); // Обновляем список отфильтрованных покемонов
-      setNextUrl(data.next); // Обновляем URL для следующей страницы покемонов
+      setPokemons((prev) => [...prev, ...pokemonDetails]);
+      setFilteredPokemons((prev) => [...prev, ...pokemonDetails]);
+      setNextUrl(data.next);
     } catch (error) {
       console.error('Error loading Pokémon:', error);
     } finally {
@@ -48,40 +51,37 @@ function PokemonCarousel() {
     }
   };
 
-  // Функция для загрузки типов покемонов
   const loadTypes = async () => {
     try {
       const response = await fetch('https://pokeapi.co/api/v2/type/');
       const data = await response.json();
-      setTypes(data.results); // Сохраняем список типов
+      setTypes(data.results);
     } catch (error) {
       console.error('Error loading Pokémon types:', error);
     }
   };
 
-  // Обновляем список покемонов при смене типа
   useEffect(() => {
     if (selectedType) {
       setFilteredPokemons(
         pokemons.filter((pokemon) => pokemon.types.includes(selectedType))
       );
     } else {
-      setFilteredPokemons(pokemons); // Если тип не выбран, показываем всех покемонов
+      setFilteredPokemons(pokemons);
     }
-  }, [selectedType, pokemons]); // Эффект срабатывает при изменении типа или списка покемонов
+  }, [selectedType, pokemons]);
 
-  // Загрузка данных при монтировании компонента
   useEffect(() => {
     loadPokemons();
     loadTypes();
   }, []);
 
   const handleTypeFilterChange = (e) => {
-    setSelectedType(e.target.value); // Обновляем выбранный тип
+    setSelectedType(e.target.value);
   };
 
   const handlePokemonSelect = (pokemon) => {
-    dispatch(setMonster(pokemon)); // Отправляем данные покемона в Redux
+    dispatch(setMonster(pokemon));
   };
 
   const scrollLeft = () => {
@@ -95,7 +95,7 @@ function PokemonCarousel() {
   const handleScroll = (e) => {
     const bottom = e.target.scrollHeight === e.target.scrollTop + e.target.clientHeight;
     if (bottom && !loading) {
-      loadPokemons(); // Загружаем новые покемоны при достижении низа карусели
+      loadPokemons();
     }
   };
 
