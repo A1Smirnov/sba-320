@@ -6,6 +6,7 @@ import { setMonster } from '../features/monsterSlice';
 import { fetchMonster } from '../services/pokeApi';
 import MonsterCard from '../components/MonsterCard';
 import '../styles/Home.css';
+import PokemonCarousel from '../components/PokemonCarousel.js';
 
 function Home() {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ function Home() {
   return (
     <div className="home">
       <h1>Welcome to Pokemon Tactical Arena!</h1>
-      <p>Select or create a monster to begin your adventure.</p>
+      <p>Select or create a monster to begin your adventure!</p>
 
       <div className="monster-selection">
         <button onClick={handleCreateCustomMonster}>Create Custom Monster</button>
@@ -58,6 +59,8 @@ function Home() {
 
       {/* MonsterCard to view component */}
       {monster.name && <MonsterCard monster={monster} />}
+
+      <PokemonCarousel /> {/* CAROUSEL! */}
 
       <button className="start-game-button">
         Go Arena!

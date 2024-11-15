@@ -6,6 +6,7 @@ import { setMonster } from './features/monsterSlice';
 import { fetchMonster } from './services/pokeApi';
 import './styles/main.css';
 import Home from './pages/Home.js';
+import PokemonCarousel from './components/PokemonCarousel.js';
 
 function App() {
     const dispatch = useDispatch();
@@ -34,6 +35,7 @@ function App() {
     return (
       <div className="App">
         <Home />
+        {/* <PokemonCarousel /> CAROUSEL! */}
       </div>
     );
   }
