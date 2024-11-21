@@ -1,7 +1,3 @@
-// ./src/App.js
-
-// ./src/App.js
-
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setMonster } from './features/monsterSlice';
@@ -10,7 +6,7 @@ import './styles/main.css';
 import Home from './pages/Home.js';
 import Arena from './components/Arena.js';
 import Battle from './components/Battle';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'; // Используем HashRouter
 
 function App() {
   const dispatch = useDispatch();
@@ -54,4 +50,3 @@ function App() {
 }
 
 export default App;
-
